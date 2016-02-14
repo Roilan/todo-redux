@@ -11,7 +11,6 @@ export default function(state = [], action) {
         if (todo.id !== action.payload.id) {
           return todo;
         }
-
         return Object.assign({}, todo, { completed: !todo.completed });
       });
     default:

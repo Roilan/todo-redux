@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import AddTodo from './AddTodo';
-import { toggleTodo } from '../actions/index';
+import { toggleTodo, setVisibleFilter, SHOW_COMPLETED, SHOW_INCOMPLETE } from '../actions/index';
 
-export default class TodoList extends Component {
+class TodoList extends Component {
   constructor() {
     super();
+
     this.renderTodoList = this.renderTodoList.bind(this);
   }
 
@@ -27,7 +28,9 @@ export default class TodoList extends Component {
         <h3>My Todo list</h3>
 
         <AddTodo />
-
+        <button onClick={this.props.setVisibleFilter.bind(null, SHOW_COMPLETED)}>Completed</button>
+        <button onClick={this.props.setVisibleFilter.bind(null, SHOW_INCOMPLETE)}>Incomplete</button>
+        <button onClick={this.props.setVisibleFilter}>Show All</button>
         <ul>
           {this.renderTodoList()}
         </ul>
@@ -36,10 +39,21 @@ export default class TodoList extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    todos: state.todos
+function setVisibleTodos (todos, filter) {
+  switch(filter) {
+    case SHOW_COMPLETED:
+      return todos.filter(todo => todo.completed);
+    case SHOW_INCOMPLETE:
+      return todos.filter(todo => !todo.completed);
+    default:
+      return todos;
   }
 }
 
-export default connect(mapStateToProps, { toggleTodo })(TodoList);
+function mapStateToProps(state) {
+  return {
+    todos: setVisibleTodos(state.todos, state.visibleTodos)
+  }
+}
+
+export default connect(mapStateToProps, { toggleTodo, setVisibleFilter })(TodoList);

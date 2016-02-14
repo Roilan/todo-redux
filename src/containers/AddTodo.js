@@ -13,6 +13,8 @@ class AddTodo extends Component {
     e.preventDefault();
     const { todoInput } = this.refs;
 
+    if (todoInput.value === '') return;
+
     this.props.addTodo(todoInput.value);
     todoInput.value = '';
   }
