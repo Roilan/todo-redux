@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import AddTodo from './AddTodo';
+import { toggleTodo } from '../actions/index';
 
 export default class TodoList extends Component {
   constructor() {
@@ -9,9 +10,13 @@ export default class TodoList extends Component {
   }
 
   renderTodoList() {
-    return this.props.todos.map((todo, key) => {
+    const { todos, toggleTodo } = this.props;
+
+    return todos.map(todo => {
+      const completedTodo = todo.completed === true ? {textDecoration : 'line-through'} : {};
+
       return (
-        <li key={key}>{todo.name}</li>
+        <li style={completedTodo} key={todo.id} onClick={toggleTodo.bind(null, todo)}>{todo.name}</li>
       )
     });
   }
@@ -37,4 +42,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(TodoList);
+export default connect(mapStateToProps, { toggleTodo })(TodoList);
